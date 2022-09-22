@@ -10,7 +10,7 @@ enable_testing()
 link_libraries(glfw ${GLEW_LIBRARIES} GL)
 
 file(GLOB SRC_UTILS utils/*.*)
-file(GLOB SRC_EXERCISES exercises/*.*)
+file(GLOB SRC_EXERCISES exercises/*.cpp)
 add_executable(opengl_learn main.cpp ${SRC_UTILS} ${SRC_EXERCISES})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

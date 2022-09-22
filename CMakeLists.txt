@@ -7,8 +7,11 @@ find_package(GLEW REQUIRED)
 include(CTest)
 enable_testing()
 
-link_libraries(glfw ${GLEW_LIBRARIES})
-add_executable(opengl_learn main.cpp)
+link_libraries(glfw ${GLEW_LIBRARIES} GL)
+
+file(GLOB SRC_UTILS utils/*.*)
+file(GLOB SRC_EXERCISES exercises/*.*)
+add_executable(opengl_learn main.cpp ${SRC_UTILS} ${SRC_EXERCISES})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

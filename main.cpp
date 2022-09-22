@@ -2,11 +2,20 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <stdio.h>
+#include "utils/shader_parse.h"
+#include "exercises/exercies.h"
+// #include <unistd.h>
+
+
 
 int main() {
+    // read shader files
+    // char  buff[256];
+    // std::string cwd = getcwd(buff, 256);
+
     // create window by GLFW
     if (!glfwInit()) return -1;
-    auto window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    auto window = glfwCreateWindow(640, 480, "Hello GL", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -24,11 +33,8 @@ int main() {
     
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
     
-    while (! glfwWindowShouldClose(window))
-	{
-
-	}
-
+    exercise1(window);
+    
     glfwTerminate();
     return 0;
 }

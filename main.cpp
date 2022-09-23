@@ -34,7 +34,8 @@ int main() {
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
     
     // exercise1(window);
-    exercise2(window);
+    // exercise2(window);
+    exercise3(window);
     
     glfwTerminate();
     return 0;

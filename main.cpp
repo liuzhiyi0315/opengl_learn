@@ -35,7 +35,8 @@ int main() {
     
     // exercise1(window);
     // exercise2(window);
-    exercise3(window);
+    // exercise3(window);
+    exercise4(window);
     
     glfwTerminate();
     return 0;

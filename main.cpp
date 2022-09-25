@@ -5,9 +5,23 @@
 #include "utils/shader_parse.h"
 #include "exercises/exercise.h"
 // #include <unistd.h>
-#define EXEC_SEQ 5
+#define EXEC_SEQ 6
 
 DELCARE_EXERCISE(EXEC_SEQ);
+
+bool is_glfw_key_pressed(GLFWwindow* window, int key) {
+    static double lastPress = glfwGetTime();
+    auto now = glfwGetTime();
+
+    if (glfwGetKey(window, key) == GLFW_PRESS) {
+        if ((now - lastPress) > 0.5) {
+            lastPress = now;
+            return true;
+        }
+    }
+
+    return false;
+}
 
 int main() {
     // read shader files

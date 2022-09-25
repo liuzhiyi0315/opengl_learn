@@ -3,10 +3,11 @@
 #include <iostream>
 #include <stdio.h>
 #include "utils/shader_parse.h"
-#include "exercises/exercies.h"
+#include "exercises/exercise.h"
 // #include <unistd.h>
+#define EXEC_SEQ 5
 
-
+DELCARE_EXERCISE(EXEC_SEQ);
 
 int main() {
     // read shader files
@@ -32,11 +33,8 @@ int main() {
     }
     
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
-    
-    // exercise1(window);
-    // exercise2(window);
-    // exercise3(window);
-    exercise4(window);
+
+    EXERCISE(EXEC_SEQ, window);
     
     glfwTerminate();
     return 0;

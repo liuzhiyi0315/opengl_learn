@@ -37,6 +37,52 @@ void processCameraInput(GLFWwindow *window, glm::vec3& cameraPos)
     if (is_glfw_key_pressed(window, GLFW_KEY_S)) {
         cameraPos -= cameraSpeed * cameraFront;
     }
+
+    if (is_glfw_key_pressed(window, GLFW_KEY_A)) {
+        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    }
+    
+    if (is_glfw_key_pressed(window, GLFW_KEY_D)) {
+        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    }
+}
+
+static glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f);
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+{
+    float xpos = static_cast<float>(xposIn);
+    float ypos = static_cast<float>(yposIn);
+
+    static float lastX = xpos;
+    static float lastY = ypos;
+
+    static float yaw   = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
+    static float pitch =  0.0f;
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    lastX = xpos;
+    lastY = ypos;
+
+    float sensitivity = 0.1f; // change this value to your liking
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    // make sure that when pitch is out of bounds, screen doesn't get flipped
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
+
+    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 }
 
 void exercise6(GLFWwindow* window) {
@@ -174,6 +220,10 @@ void exercise6(GLFWwindow* window) {
     };
 
     glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
+    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 cameraUp = glm::vec3(0.0, 1.0, 0.0);
+
+    glfwSetCursorPosCallback(window, mouse_callback);
 
     while (! glfwWindowShouldClose(window))
 	{       
@@ -181,7 +231,7 @@ void exercise6(GLFWwindow* window) {
         if (glfwGetKey(window, GLFW_KEY_END) == GLFW_PRESS) {
              glfwSetWindowShouldClose(window, true);
         }
-        
+
         if (is_glfw_key_pressed(window, GLFW_KEY_UP)) {
             if (tex2transparent < 10) {
                 tex2transparent += 1;
@@ -230,9 +280,10 @@ void exercise6(GLFWwindow* window) {
         }
 
         processCameraInput(window, cameraPos);
+        cameraFront = glm::normalize(front);
 
         glm::mat4 view = glm::mat4(1.0f);
-        view = glm::lookAt(cameraPos, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0)); 
+        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp); 
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     
         // second box

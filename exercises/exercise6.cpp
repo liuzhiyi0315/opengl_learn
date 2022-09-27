@@ -10,48 +10,16 @@
 
 bool is_glfw_key_pressed(GLFWwindow* window, int key);
 
-double get_frame_delta() {
-    static double lastFrame = glfwGetTime();
-    auto currentFrame = glfwGetTime();
-
-    lastFrame = currentFrame;
-
-    auto deltaTime = currentFrame - lastFrame;
-
-    return deltaTime > 0?deltaTime:1;
-}
+double get_frame_delta();
 
 
-void processCameraInput(GLFWwindow *window, glm::vec3& cameraPos)
-{
-    auto deltaTime = get_frame_delta();
-    float cameraSpeed = 2.0f * deltaTime; // adjust accordingly
-
-    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
-
-    if (is_glfw_key_pressed(window, GLFW_KEY_W)) {
-        cameraPos += cameraSpeed * cameraFront;
-    }
-
-    if (is_glfw_key_pressed(window, GLFW_KEY_S)) {
-        cameraPos -= cameraSpeed * cameraFront;
-    }
-
-    if (is_glfw_key_pressed(window, GLFW_KEY_A)) {
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    }
-    
-    if (is_glfw_key_pressed(window, GLFW_KEY_D)) {
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    }
-}
+void processCameraInput(GLFWwindow *window, glm::vec3& cameraPos);
 
 static glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f);
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);

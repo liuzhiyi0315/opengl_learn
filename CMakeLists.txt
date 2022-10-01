@@ -7,7 +7,7 @@ find_package(GLEW REQUIRED)
 include(CTest)
 enable_testing()
 
-link_libraries(glfw ${GLEW_LIBRARIES} GL)
+link_libraries(glfw ${GLEW_LIBRARIES} GL assimp)
 
 file(GLOB SRC_UTILS utils/*.*)
 file(GLOB SRC_EXERCISES exercises/*.cpp)

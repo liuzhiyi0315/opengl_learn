@@ -34,7 +34,12 @@ unsigned int createShader(unsigned int shader_type, std::string shader_src) {
     {
         char infoLog[512];
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        if (GL_VERTEX_SHADER == shader_type) {
+            std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        }
+        else {
+            std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+        }
         return 0;
     }
     

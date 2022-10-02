@@ -7,10 +7,7 @@ class Model
 {
     public:
         /*  函数   */
-        Model(char *path)
-        {
-            loadModel(path);
-        }
+        void loadModel(std::string const &path);
         void Draw(unsigned int shaderProgram);   
     private:
         /*  模型数据  */
@@ -18,7 +15,6 @@ class Model
         std::vector<Mesh> meshes;
         std::string directory;
         /*  函数   */
-        void loadModel(std::string const &path);
         void processNode(aiNode *node, const aiScene *scene);
         Mesh processMesh(aiMesh *mesh, const aiScene *scene);
         std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, 

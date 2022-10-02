@@ -29,11 +29,11 @@ void Mesh::setupMesh()
     glEnableVertexAttribArray(0);   
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     // 顶点法线
-    glEnableVertexAttribArray(1);   
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+    glEnableVertexAttribArray(4);   
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
     // 顶点纹理坐标
-    glEnableVertexAttribArray(2);   
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+    glEnableVertexAttribArray(3);   
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 
     glBindVertexArray(0);
 }
@@ -44,7 +44,8 @@ void Mesh::Draw(unsigned int shaderProgram)
     unsigned int specularNr = 1;
 
     char uniform_name[32];
-    for(unsigned int i = 0; i < textures.size(); i++)
+    auto tex_cnt = textures.size();
+    for(unsigned int i = 0; i < tex_cnt; i++)
     {
         glActiveTexture(GL_TEXTURE0 + i); // 在绑定之前激活相应的纹理单元
         if (textures[i].type == "diffuse") {

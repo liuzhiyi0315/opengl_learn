@@ -19,8 +19,15 @@ void createTexture(int width, int height, unsigned char* data, unsigned int form
     glBindTexture(GL_TEXTURE_2D, texture);
 
     // 为当前绑定的纹理对象设置环绕、过滤方式
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    if (format == GL_RGBA) {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    }
+    else {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);   
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
@@ -33,8 +40,9 @@ void createTexture(int width, int height, unsigned char* data, unsigned int form
 
 }
 
-void createTextureFromFile(std::string texture_path) {
+void createTextureFromFile(std::string texture_path, bool flip) {
     int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(flip);
     auto data = ParseTextureImage(texture_path, &width, &height, &nrChannels);
     if (data) {
         unsigned int _format;

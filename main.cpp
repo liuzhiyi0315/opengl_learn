@@ -8,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 // #include <unistd.h>
-#define EXEC_SEQ 13
+#define EXEC_SEQ 14
 
 DELCARE_EXERCISE(EXEC_SEQ);
 
@@ -69,7 +69,7 @@ int main() {
 
     // create window by GLFW
     if (!glfwInit()) return -1;
-    auto window = glfwCreateWindow(640, 480, "Hello GL", NULL, NULL);
+    auto window = glfwCreateWindow(1024, 768, "Hello GL", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;

@@ -10,7 +10,7 @@ const float offset = 1.0 / 300.0;
 
 void main()
 { 
-    if (post_process == 0) {
+    if (post_process == 0 || post_process > 5) {
         FragColor = texture(screenTexture, TexCoords);
     }
     else if (post_process == 1) {

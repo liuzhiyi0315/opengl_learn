@@ -577,12 +577,17 @@ void exercise16(GLFWwindow* window) {
         glCullFace(GL_BACK);
         // glDisable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
-        glUniform1i(glGetUniformLocation(shaderProgram, "singleColor"), 6);
+        glUniform1i(glGetUniformLocation(shaderProgram, "singleColor"), 0);
 
         glActiveTexture(GL_TEXTURE0 + 4);
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
         glUniform1i(glGetUniformLocation(shaderProgram, "skybox"), 4);
 
+        nanosuit.Draw(shaderProgram);
+
+        glUniform1i(glGetUniformLocation(shaderProgram, "singleColor"), 6);
+        model = glm::translate(model, glm::vec3(-8.0, 0.0, 0.0));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         nanosuit.Draw(shaderProgram);
 
         // draw border

@@ -93,11 +93,11 @@ vec3 CalcLight(Light light, vec3 normal, vec3 viewDir, vec3 fragPos)
     spec = clamp(spec, 0.0, 1.0);
   
     // 合并结果
-    float ratio = 1.00 / 1.52;
-    vec3 I = normalize(FragPos - viewPos);
-    vec3 R = refract(I, normalize(Normal), ratio);
-    vec3 diffuse_tex = vec3(mix(texture(material.diffuse[0], TexCoord2), texture(skybox, R), 0.2));
-    vec3 specular_tex = vec3(mix(texture(material.specular[0], TexCoord2), texture(skybox, R), 0.5));
+    // float ratio = 1.00 / 1.52;
+    // vec3 I = normalize(FragPos - viewPos);
+    // vec3 R = refract(I, normalize(Normal), ratio);
+    vec3 diffuse_tex = vec3(mix(texture(material.diffuse[0], TexCoord2), texture(material.diffuse[1], TexCoord2), 0.2));
+    vec3 specular_tex = vec3(mix(texture(material.specular[0], TexCoord2), texture(material.specular[1], TexCoord2), 0.5));
 
 
     vec3 ambient  = light.part.ambient  * diffuse_tex;

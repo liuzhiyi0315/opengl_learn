@@ -8,7 +8,8 @@ class Model
     public:
         /*  函数   */
         void loadModel(std::string const &path);
-        void Draw(unsigned int shaderProgram);   
+        void Draw(unsigned int shaderProgram, int amount=0);
+        void setupInstanceMatrices(int amount, glm::mat4* modelMatrices);   
     private:
         /*  模型数据  */
         std::vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.

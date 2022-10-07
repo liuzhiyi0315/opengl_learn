@@ -22,7 +22,8 @@ class Mesh {
         std::vector<Texture> textures;
         /*  函数  */
         Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-        void Draw(unsigned int shaderProgram);
+        void Draw(unsigned int shaderProgram, int amount=0);
+        void Bind();
     private:
         /*  渲染数据  */
         unsigned int VAO, VBO, EBO;

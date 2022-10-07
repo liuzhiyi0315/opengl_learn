@@ -38,7 +38,7 @@ void Mesh::setupMesh()
     glBindVertexArray(0);
 }
 
-void Mesh::Draw(unsigned int shaderProgram) 
+void Mesh::Draw(unsigned int shaderProgram, int amount) 
 {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
@@ -62,6 +62,17 @@ void Mesh::Draw(unsigned int shaderProgram)
 
     // 绘制网格
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    if (amount == 0) {
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    }
+    else {
+        glDrawElementsInstanced(
+            GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, amount);
+    }
+
     glBindVertexArray(0);
+}
+
+void Mesh::Bind() {
+    glBindVertexArray(VAO);
 }

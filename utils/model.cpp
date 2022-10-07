@@ -2,12 +2,13 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <iostream>
+#include <GL/glew.h>
 #include "texture_parse.h"
 
-void Model::Draw(unsigned int shaderProgram)
+void Model::Draw(unsigned int shaderProgram, int amount)
 {
     for (auto mesh: meshes) {
-        mesh.Draw(shaderProgram);
+        mesh.Draw(shaderProgram, amount);
     }
 }
 
@@ -136,4 +137,28 @@ void Model::loadModel(std::string const &path)
 
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
+}
+
+void Model::setupInstanceMatrices(int amount, glm::mat4* modelMatrices) {
+    // 顶点缓冲对象
+    unsigned int buffer;
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), modelMatrices, GL_STATIC_DRAW);
+
+    const int layout = 5;
+    for(unsigned int i = 0; i < meshes.size(); i++)
+    {
+        meshes[i].Bind();
+        // 顶点属性
+        GLsizei vec4Size = sizeof(glm::vec4);
+
+        for (auto j = 0; j < 4; j++) {
+            glEnableVertexAttribArray(layout+j); 
+            glVertexAttribPointer(layout+j, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(j * vec4Size));
+            glVertexAttribDivisor(layout+j, 1);
+        }
+
+        glBindVertexArray(0);
+    }  
 }

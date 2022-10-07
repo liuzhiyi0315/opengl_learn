@@ -37,6 +37,9 @@ unsigned int createShader(unsigned int shader_type, std::string shader_src) {
         if (GL_VERTEX_SHADER == shader_type) {
             std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
         }
+        else if (GL_GEOMETRY_SHADER == shader_type) {
+            std::cout << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << std::endl;
+        }
         else {
             std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
         }
@@ -46,8 +49,8 @@ unsigned int createShader(unsigned int shader_type, std::string shader_src) {
     return shader;
 }
 
-unsigned int createShaderProgram(unsigned int shaders[]) {
-    auto shader_count = sizeof(shaders) / sizeof(unsigned int);
+unsigned int createShaderProgram(unsigned int shaders[], unsigned int count) {
+    auto shader_count = count;
     auto shaderProgram = glCreateProgram();
 
     for (auto i = 0; i < shader_count; i ++) {

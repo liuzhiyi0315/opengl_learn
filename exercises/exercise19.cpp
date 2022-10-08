@@ -114,7 +114,7 @@ glm::mat4* create_rock_matrices(int amount) {
     modelMatrices = new glm::mat4[amount];
     srand(glfwGetTime()); // 初始化随机种子    
     float radius = 8.0;
-    float offset = 2.5f;
+    float offset = 1.5f;
     for(unsigned int i = 0; i < amount; i++)
     {
         glm::mat4 model = glm::mat4(1.0f);
@@ -125,7 +125,7 @@ glm::mat4* create_rock_matrices(int amount) {
         float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
         float x = sin(angle) * radius + displacement;
         displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-        float y = displacement * 0.4f; // 让行星带的高度比x和z的宽度要小
+        float y = displacement * 0.1f; // 让行星带的高度比x和z的宽度要小
         displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
         float z = cos(angle) * radius + displacement;
         model = glm::translate(model, glm::vec3(x, y, z));
@@ -201,6 +201,7 @@ void exercise19(GLFWwindow* window) {
     // 投影矩阵
     glm::mat4 projection = glm::mat4(1.0f);
     projection = glm::perspective(glm::radians(45.0f), 1024.0f / 768.0f, 0.1f, 100.0f);
+    // projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, 0.1f, 100.0f);
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -214,7 +215,9 @@ void exercise19(GLFWwindow* window) {
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_MULTISAMPLE); // Enabled by default on some drivers, but not all so always enable to make sure
     glEnable(GL_DEPTH_TEST);
+
    
     glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
     glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -232,8 +235,10 @@ void exercise19(GLFWwindow* window) {
 
     // auto rock_model = glm::mat4(1.0f);
     // auto rock_trans = glm::mat4(1.0f);
-
+    auto planet_pos = glm::vec3(2, -1.0, 0.0);
+    // auto planet_pos = glm::vec3(0.0, 0.0, 0.0);
     ////////////////////////////////////////////////////////////////////
+
     glfwSetCursorPosCallback(window, mouse_callback);
 
     while (! glfwWindowShouldClose(window))
@@ -260,10 +265,15 @@ void exercise19(GLFWwindow* window) {
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
         glUseProgram(planetShader.id);
+        
+        auto glfw_time = (float)glfwGetTime();
+
+        auto _planet_pos = glm::vec3(projection * view * glm::vec4(planet_pos, 1.0));
+
         glm::mat4 suit_model = glm::mat4(1.0f);
-        suit_model = glm::translate(suit_model, glm::vec3(2, -1.0, 0.0));
         suit_model = glm::scale(suit_model, glm::vec3(0.45f));
-        suit_model = glm::rotate(suit_model, (float)glfwGetTime() * glm::radians(30.0f), glm::vec3(0.2f, 1.0f, 0.0f));
+        suit_model = glm::translate(suit_model, planet_pos);
+        suit_model = glm::rotate(suit_model, glfw_time * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         glUniformMatrix4fv(planetShader.modelLoc, 1, GL_FALSE, glm::value_ptr(suit_model));
         glUniformMatrix4fv(planetShader.viewDirLoc, 1, GL_FALSE, glm::value_ptr(cameraFront));
         planet.Draw(planetShader.id);
@@ -278,9 +288,14 @@ void exercise19(GLFWwindow* window) {
         glUniformMatrix4fv(rockShader.viewDirLoc, 1, GL_FALSE, glm::value_ptr(cameraFront));
 
         auto rock_model = glm::mat4(1.0f);
-        rock_model = glm::rotate(rock_model, (float)glfwGetTime() * glm::radians(-30.0f), glm::vec3(-0.2f, 1.0f, 0.0f));
+        rock_model = glm::translate(rock_model, planet_pos);
+
+        auto angle = glfw_time * 30.0f;
+        auto rotate_x = 0.2;
+        rock_model = glm::rotate(rock_model, glm::radians(angle), glm::vec3(rotate_x, 1.0f, 0.0f));
+        // rock_model = glm::rotate(rock_model, glm::radians(angle), glm::vec3(-2.0f, 0.0f, 0.0f));
         // rock_model = glm::translate(rock_model, glm::vec3(2, -1.0, 0.0));
-        // RotateArbitraryLine(rock_trans, glm::vec3(-2.0, 1.0, 0.0), glm::vec3(-2.0, -1.0, 0.0), (float)glfwGetTime() * glm::radians(50.0f));
+        // RotateArbitraryLine(rock_model, glm::vec3(-2.0, 1.0, 0.0), glm::vec3(2.0, -1.0, 0.0), (float)glfwGetTime() * glm::radians(50.0f));
         glUniformMatrix4fv(rockShader.modelLoc, 1, GL_FALSE, glm::value_ptr(rock_model));
         rock.Draw(rockShader.id, rock_amount);
 

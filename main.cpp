@@ -74,6 +74,9 @@ int main() {
         glfwTerminate();
         return -1;
     }
+
+    glfwWindowHint(GLFW_SAMPLES, 4);
+
     glfwMakeContextCurrent(window);
 
     GLenum err = glewInit();

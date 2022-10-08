@@ -12,7 +12,7 @@ unsigned char* ParseTextureImage(std::string texture_path, int* width, int* heig
     return data;
 }
 
-void createTexture(int width, int height, unsigned char* data, unsigned int format) {
+unsigned int createTexture(int width, int height, unsigned char* data, unsigned int format) {
     static int texture_used = 0;
     unsigned int texture;
     glGenTextures(1, &texture);
@@ -39,10 +39,12 @@ void createTexture(int width, int height, unsigned char* data, unsigned int form
     stbi_image_free(data);
     texture_used +=1;
 
+    return texture;
 }
 
-void createTextureFromFile(std::string texture_path, bool flip) {
+unsigned int createTextureFromFile(std::string texture_path, bool flip) {
     int width, height, nrChannels;
+    unsigned int tex = 0;
     stbi_set_flip_vertically_on_load(flip);
     auto data = ParseTextureImage(texture_path, &width, &height, &nrChannels);
     if (data) {
@@ -54,12 +56,13 @@ void createTextureFromFile(std::string texture_path, bool flip) {
             _format = GL_RGB;
         }
 
-        createTexture(width, height, data, _format);
+        tex = createTexture(width, height, data, _format);
     }
     else {
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_set_flip_vertically_on_load(false);
+    return tex;
 }
 
 unsigned int TextureFromFile(const char *path, const std::string &directory)

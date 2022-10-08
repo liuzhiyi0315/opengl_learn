@@ -8,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 // #include <unistd.h>
-#define EXEC_SEQ 19
+#define EXEC_SEQ 20
 
 DELCARE_EXERCISE(EXEC_SEQ);
 
@@ -94,4 +94,97 @@ int main() {
     
     glfwTerminate();
     return 0;
+}
+
+void RotateArbitraryLine(glm::mat4& rotateMat, glm::vec3 v1, glm::vec3 v2, float theta)
+{
+    float a = v1.x;
+    float b = v1.y;
+    float c = v1.z;
+
+    glm::vec3 p = glm::normalize(v2 - v1);
+    float u = p.x;
+    float v = p.y;
+    float w = p.z;
+
+    float uu = u * u;
+    float uv = u * v;
+    float uw = u * w;
+    float vv = v * v;
+    float vw = v * w;
+    float ww = w * w;
+    float au = a * u;
+    float av = a * v;
+    float aw = a * w;
+    float bu = b * u;
+    float bv = b * v;
+    float bw = b * w;
+    float cu = c * u;
+    float cv = c * v;
+    float cw = c * w;
+
+    float costheta = cosf(theta);
+    float sintheta = sinf(theta);
+
+    rotateMat[0].x = uu + (vv + ww) * costheta;
+    rotateMat[0].y = uv * (1 - costheta) + w * sintheta;
+    rotateMat[0].z = uw * (1 - costheta) - v * sintheta;
+    rotateMat[0].w = 0;
+
+    rotateMat[1].x = uv * (1 - costheta) - w * sintheta;
+    rotateMat[1].y = vv + (uu + ww) * costheta;
+    rotateMat[1].z = vw * (1 - costheta) + u * sintheta;
+    rotateMat[1].w = 0;
+
+    rotateMat[2].x = uw * (1 - costheta) + v * sintheta;
+    rotateMat[2].y = vw * (1 - costheta) - u * sintheta;
+    rotateMat[2].z = ww + (uu + vv) * costheta;
+    rotateMat[2].w = 0;
+
+    rotateMat[3].x = (a * (vv + ww) - u * (bv + cw)) * (1 - costheta) + (bw - cv) * sintheta;
+    rotateMat[3].y = (b * (uu + ww) - v * (au + cw)) * (1 - costheta) + (cu - aw) * sintheta;
+    rotateMat[3].z = (c * (uu + vv) - w * (au + bv)) * (1 - costheta) + (av - bu) * sintheta;
+    rotateMat[3].w = 1;
+}
+
+glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f);
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+{
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE) {
+        return;
+    }
+
+    float xpos = static_cast<float>(xposIn);
+    float ypos = static_cast<float>(yposIn);
+
+    static float lastX = xpos;
+    static float lastY = ypos;
+
+    static float yaw   = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
+    static float pitch =  0.0f;
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    lastX = xpos;
+    lastY = ypos;
+
+    float sensitivity = 0.1f; // change this value to your liking
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    // make sure that when pitch is out of bounds, screen doesn't get flipped
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
+
+    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 }
